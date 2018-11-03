@@ -15,13 +15,14 @@ ShiftregStepperControl::begin() {
 
 
 void
-ShiftregStepperControl::doTick(Status status) {
+ShiftregStepperControl::doMove(Status status) {
   digitalWrite(clk_pin_, LOW);
   digitalWrite(ltc_pin_, LOW);
-  int i = sizeof(Status);
+//  int i = sizeof(Status);
+  int i = nSteppers();
   while (i--) {
     shiftOut(ser_pin_, clk_pin_, MSBFIRST,
-             (status & (0xff << i * 8)) >> (i * 8));
+             (status & (0xFF << i * 8)) >> (i * 8));
   }
   digitalWrite(ltc_pin_, HIGH);
 }

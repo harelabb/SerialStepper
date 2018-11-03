@@ -12,4 +12,5 @@ namespace LoopClock {
   Time now() {
     return now_;
   }
+
 }

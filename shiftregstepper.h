@@ -11,7 +11,7 @@ public:
   ShiftregStepperControl(byte ser_pin, byte ltc_pin, byte clk_pin);
   void begin() override;
 private:
-  void doTick(Status status) override;
+  void doMove(Status status) override;
   const byte ser_pin_;
   const byte ltc_pin_;
   const byte clk_pin_;

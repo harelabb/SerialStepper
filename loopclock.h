@@ -7,6 +7,6 @@ namespace LoopClock {
   using Time = decltype(::micros());
   void tick();
   Time now();
-};
+}
 
 #endif

@@ -1,27 +1,21 @@
 #include "SerialStepper.h"
 
-Stepper::Stepper(StepperControl& control, byte unit)
+Stepper::Stepper(StepperControl& control)
   : clock_(now()) {
-  control.addStepper(this, unit);
+  control.addStepper(this);
 }
 
-
-void Stepper::forward(bool fwd) {
-  forward_ = fwd;
+void Stepper::start() {
+  remaining_ = forever();
 }
 
-bool Stepper::forward() const {
-  return forward_;
-}
-
-void Stepper::reverse() {
-  reverse_ = true;
+void Stepper::stop() {
+  remaining_ = 0;
 }
 
 void Stepper::speed(float rpm) {
   if (rpm > 0.0f) {
-    micros_pr_step_ = 60.0e+6f / (rpm * steps_pr_turn);
-    Serial.println(micros_pr_step_, DEC);
+    micros_pr_step_ = 60.0e+6f / (rpm * steps_pr_turn_);
   }
   else {
     micros_pr_step_ = 0;
@@ -29,25 +23,46 @@ void Stepper::speed(float rpm) {
   clock_ = now();
 }
 
-void Stepper::steps(uint32_t stp) {
-  continuous_ = false;
-  remaining_ = stp;
+void Stepper::direction(Direction dir) {
+  direction_ = dir;
 }
 
-uint32_t Stepper::steps() const {
+void Stepper::reverse() {
+  reverse_ = true;
+}
+
+void Stepper::step(uint32_t steps) {
+  remaining_ = steps;
+}
+
+Stepper::Direction Stepper::direction() const {
+  return direction_;
+}
+
+uint32_t Stepper::remaining() const {
   return remaining_;
+}
+
+void Stepper::turn(float turns) {
+  if (turns > 0) {
+    step(uint32_t(float(steps_pr_turn_) * turns));
+  }
+  else {
+    step(0);
+  }
 }
 
 void Stepper::move(StepperControl& control, byte unit) {
   if (remaining_ > 0) {
     if (now() - clock_ >= micros_pr_step_) {
-      clock_ = now();
+      clock_ += micros_pr_step_;
       if (reverse_) {
-          forward_ = !forward_;
-          reverse_ = false;
+        direction_ = !direction_;
+        reverse_ = false;
       }
-      control.step(half_step ? hstep() : fstep(), unit);
-      if (!continuous_) {
+      advance();
+      control.step(fullStep(), unit);
+      if (remaining_ != forever()) {
         --remaining_;
       }
     }
@@ -58,39 +73,17 @@ void Stepper::move(StepperControl& control, byte unit) {
   }
 }
 
-byte Stepper::hstep() {
-  current_ = (current_ + 8 + 1 - 2 * int(forward_)) % 8;
-  return (hsteps_ >> (4 * current_)) & 0xf;
+void Stepper::advance() {
+   current_ = (current_ + 4 + 1 - 2 * int(direction_)) % 4;
 }
 
-byte Stepper::fstep() {
-  current_ = (current_ + 4 + 1 - 2 * int(forward_)) % 4;
-  return (fsteps_ >> (4 * current_)) & 0xf;
+byte Stepper::fullStep() const {
+  static constexpr int32_t fsteps = 0b1001001101101100;
+  return (fsteps >> (4 * current_)) & 0x0F;
 }
 
 bool Stepper::running() const {
   return remaining_ > 0;
-}
-
-void Stepper::turn(float turns) {
-  if (turns > 0) {
-    steps(uint32_t(float(steps_pr_turn) * turns));
-    if (half_step) {
-      remaining_ *= 2;
-    }
-  }
-  else {
-    steps(0);
-  }
-}
-
-void Stepper::run() {
-  remaining_ = 1;
-  continuous_ = true;
-}
-
-void Stepper::stop() {
-  remaining_ = 0;
 }
 
 LoopClock::Time Stepper::now() const {
@@ -98,9 +91,9 @@ LoopClock::Time Stepper::now() const {
 }
 
 
-void StepperControl::tick() {
+void StepperControl::run() {
   doMoveSteppers();
-  doTick();
+  doRun();
 }
 
 
@@ -109,9 +102,9 @@ void StepperControl::step(byte step, byte unit) {
 }
 
 
-void StepperControl::addStepper(Stepper* stepper, byte unit) {
+void StepperControl::addStepper(Stepper* stepper) {
   if (stepper) {
-    doAddStepper(stepper, unit);
+    doAddStepper(stepper);
   }
 }
 

@@ -15,31 +15,9 @@ ArduinoStepperControl::begin() {
 
 
 void
-ArduinoStepperControl::doTick() {
-  if (status_ != old_status_) {
-    old_status_ = status_;
-    digitalWrite(pin1_, status_ & 1 ? HIGH : LOW);
-    digitalWrite(pin2_, status_ & 2 ? HIGH : LOW);
-    digitalWrite(pin3_, status_ & 4 ? HIGH : LOW);
-    digitalWrite(pin4_, status_ & 8 ? HIGH : LOW);
-  }
-}
-
-void
-ArduinoStepperControl::doStep(byte step, byte) {
-  status_ = step;
-}
-
-void
-ArduinoStepperControl::doMoveSteppers() {
-  if (stepper_) {
-    stepper_->move(*this, 0);
-  }
-}
-
-void
-ArduinoStepperControl::doAddStepper(Stepper* stepper, byte unit) {
-  if (unit == 0 && !stepper_) {
-    stepper_ = stepper;
-  }
+ArduinoStepperControl::doMove(Status status) {
+  digitalWrite(pin1_, status & 1 ? HIGH : LOW);
+  digitalWrite(pin2_, status & 2 ? HIGH : LOW);
+  digitalWrite(pin3_, status & 4 ? HIGH : LOW);
+  digitalWrite(pin4_, status & 8 ? HIGH : LOW);
 }
