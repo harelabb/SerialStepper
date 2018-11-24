@@ -16,7 +16,7 @@ Mcp23017StepperControl mcp23017(0x20);
 // (ser, latch, clock)
 //ShiftregStepperControl shift_reg(10, 11, 12);
 
-LoopClock::Timer clk1, clk2, clk3, clk4;
+loopClock::Timer clk1, clk2, clk3;
 
 Stepper stp1(mcp23017);
 Stepper stp2(mcp23017);
@@ -82,7 +82,7 @@ void setup() {
 
 void loop() {
   // Update the clock and move the stepper if due
-  LoopClock::tick();
+  loopClock::tick();
   mcp23017.run();
 //  mcp23017_2.run();
 //  pcf8574.run();
@@ -94,8 +94,9 @@ void loop() {
   // stepper3.run();;
 
   if (!stp1.running()) {
-    if (clk1.wait(5)) {
-      stp3.speed(2);
+    clk1.set(5);
+    if (clk1.wait()) {
+      stp3.speed(0.5);
       if (stp2.running()) {
         stp1.reverse();
       }
@@ -103,25 +104,24 @@ void loop() {
     }
   }
   if (!stp2.running()) {
-    if (clk2.wait(6)) {
-      stp3.speed(5);
-      stp2.reverse();
-    }
+    clk2.set(6);
     stp2.reverse();
     stp2.turn(4);
   }
-  if (clk3.wait(50)) {
-    stp1.stop();
-  }
-  if (clk3.wait(5)) {
+  if (clk2.wait()) {
+    stp3.speed(12);
     stp3.reverse();
   }
-  if (clk4.wait(10)) {
-    if (!stp4.running()) {
+  // Ten seconds on, five seconds off
+  if (!stp4.running()) {
+    if (clk3.set(10) || clk3.wait()) {
       stp4.start();
     }
-    else {
+  }
+  else {
+    if (clk3.wait()) {
       stp4.stop();
+      clk3.set(5);
     }
   }
 }

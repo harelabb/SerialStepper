@@ -1,5 +1,7 @@
 #include "SerialStepper.h"
 
+using loopClock::now;
+
 Stepper::Stepper(StepperControl& control)
   : clock_(now()) {
   control.addStepper(this);
@@ -85,11 +87,6 @@ byte Stepper::fullStep() const {
 bool Stepper::running() const {
   return remaining_ > 0;
 }
-
-LoopClock::Time Stepper::now() const {
-  return LoopClock::now();
-}
-
 
 void StepperControl::run() {
   doMoveSteppers();

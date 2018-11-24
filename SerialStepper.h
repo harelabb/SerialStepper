@@ -33,7 +33,6 @@ private:
   }
   void advance();
   byte fullStep() const;
-  LoopClock::Time now() const;
 
   byte current_ = 0;
   Direction direction_ = FORWARD;
@@ -41,7 +40,7 @@ private:
 
   uint32_t micros_pr_step_ = 0;
   uint32_t remaining_ = 0;
-  LoopClock::Time clock_;
+  loopClock::Time clock_;
   static constexpr uint32_t steps_pr_turn_ = 2048;
 };
 

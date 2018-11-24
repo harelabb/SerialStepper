@@ -2,32 +2,38 @@
 #include <Arduino.h>
 
 namespace {
-  using MsTime = decltype(::millis());
-  MsTime ms_now_ = ::millis();
-  LoopClock::Time now_ =  ::micros();
+
+  loopClock::Millis millis_ = ::millis();
+  loopClock::Time micros_ = ::micros();
+
 }
 
-namespace LoopClock {
+
+namespace loopClock {
 
   void tick() {
-    ms_now_ = ::millis();
-    now_ = ::micros();
+    millis_ = ::millis();
+    micros_ = ::micros();
   }
 
   Time now() {
-    return now_;
+    return micros_;
   }
 
-  bool Timer::wait(float secs) {
-    if (secs_ > 0) {
-      if (secs_ < ms_now_ / 1000) {
-        secs_ = 0;
-        return true;
-      }
+  bool Timer::set(float secs) {
+    if (time_ > 0) {
+      return false;
     }
-    else {
-      secs_ = secs + ms_now_ / 1000;
+    time_ = Millis(secs * 1000 + millis_);
+    return true;
+  }
+
+  bool Timer::wait() {
+    if (time_ > 0 && time_ < millis_) {
+      time_ = 0;
+      return true;
     }
     return false;
   }
+
 }

@@ -3,16 +3,19 @@
 
 #include <Arduino.h>
 
-namespace LoopClock {
+namespace loopClock {
   using Time = decltype(::micros());
-  void tick();
+  using Millis = decltype(::millis());
+
   Time now();
+  void tick();
 
   class Timer {
   public:
-    bool wait(float secs);
+    bool set(float secs);
+    bool wait();
   private:
-    float secs_;
+    Millis time_ = 0;
   };
 }
 
