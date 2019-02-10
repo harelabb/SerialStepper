@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 namespace loopClock {
-  using Time = decltype(::micros());
+  using Micros = decltype(::micros());
   using Millis = decltype(::millis());
 
-  Time now();
+  Micros now();
   void tick();
 
   class Timer {

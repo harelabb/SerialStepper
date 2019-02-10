@@ -18,7 +18,6 @@ void
 ShiftregStepperControl::doMove(Status status) {
   digitalWrite(clk_pin_, LOW);
   digitalWrite(ltc_pin_, LOW);
-//  int i = sizeof(Status);
   int i = nSteppers();
   while (i--) {
     shiftOut(ser_pin_, clk_pin_, MSBFIRST,

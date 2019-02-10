@@ -4,6 +4,13 @@
 //#include "shiftregstepper.h"
 #include <Wire.h>
 #include <AccelStepper.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+
+#include <Ota.h>
+
+static const char* ssid = "spelemann2";
+static const char* password = "konnefin";
 
 // Make a Mcp23017StepperControl on i2c address 0x20
 //Pcf8574StepperControl pcf8574;
@@ -48,7 +55,9 @@ void backward(Stepper& stepper) {
 void setup() {
   // Initialize libraries
   Serial.begin(115200);
-  Wire.begin();
+  WifiConnect(ssid, password);
+  OtaSetup();
+  Wire.begin(0, 2);
 
   // Initialize the stepper motor controllers
   mcp23017.begin();
@@ -70,29 +79,36 @@ void setup() {
   // stepper3.setAcceleration(100.0);
   // stepper3.moveTo(10000000);
 
-  stp1.speed(4);
-  stp2.speed(8);
-  stp4.speed(10);
-  stp3.speed(10);
+  // stp1.speed(4);
+  // stp2.speed(8);
+  // stp4.speed(0);
+  // stp3.speed(10);
   stp3.start();
+  stp4.start();
   stp2.direction(Stepper::Direction::BACKWARD);
   Serial.println("Starting stepper motors");
 }
 
-
-void loop() {
-  // Update the clock and move the stepper if due
+void runner() {
   loopClock::tick();
   mcp23017.run();
+  // Update the clock and move the stepper if due
 //  mcp23017_2.run();
 //  pcf8574.run();
 //  shift_reg.run();
 
   // Update the AccelSteppers
   // stepper1.run();
-  // stepper2.run();;
-  // stepper3.run();;
+  // stepper2.run();
+  // stepper3.run();
 
+  // check for ota sketch update
+  OtaLoop();
+}
+
+
+void loop() {
+  runner();
   if (!stp1.running()) {
     clk1.set(5);
     if (clk1.wait()) {
@@ -100,13 +116,15 @@ void loop() {
       if (stp2.running()) {
         stp1.reverse();
       }
-      stp1.turn(5);
+      stp1.speed(4);
+      stp1.turn(1.5);
     }
   }
   if (!stp2.running()) {
     clk2.set(6);
+    stp2.speed(8);
     stp2.reverse();
-    stp2.turn(4);
+    stp2.turn(2);
   }
   if (clk2.wait()) {
     stp3.speed(12);
@@ -114,14 +132,16 @@ void loop() {
   }
   // Ten seconds on, five seconds off
   if (!stp4.running()) {
-    if (clk3.set(10) || clk3.wait()) {
+    if (clk3.wait()) {
+      stp4.speed(10);
       stp4.start();
     }
+    clk3.set(10);
   }
   else {
     if (clk3.wait()) {
-      stp4.stop();
-      clk3.set(5);
+      stp4.speed(0);
     }
+    clk3.set(5);
   }
 }

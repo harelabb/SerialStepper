@@ -21,6 +21,7 @@ public:
   uint32_t remaining() const;
   bool running() const;
 
+  void advance();
   void move(StepperControl& control, byte unit);
 
   Stepper& operator=(const Stepper&) = delete;
@@ -28,10 +29,6 @@ public:
   Stepper(Stepper&&) = delete;
 
 private:
-  static constexpr uint32_t forever() {
-    return ~uint32_t(0);
-  }
-  void advance();
   byte fullStep() const;
 
   byte current_ = 0;
@@ -40,8 +37,9 @@ private:
 
   uint32_t micros_pr_step_ = 0;
   uint32_t remaining_ = 0;
-  loopClock::Time clock_;
+  loopClock::Micros clock_;
   static constexpr uint32_t steps_pr_turn_ = 2048;
+  static constexpr uint32_t forever_ = ~uint32_t(0);
 };
 
 inline Stepper::Direction operator!(Stepper::Direction direction) {
@@ -103,10 +101,13 @@ private:
   }
 
   void doStep(byte step, byte unit) override {
-    Status unit_step = step << (4 * unit);
-    Status unit_mask = 0x0F << (4 * unit);
-    status_ = (status_ & ~unit_mask) | unit_step;
+    if (unit < nSteppers()) {
+      Status unit_stat = step << (4 * unit);
+      Status unit_mask = 0x0F << (4 * unit);
+      status_ = (status_ & ~unit_mask) | unit_stat;
+    }
   }
+
 
   void doRun() override {
     if (status_ != old_status_) {

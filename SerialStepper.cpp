@@ -8,7 +8,7 @@ Stepper::Stepper(StepperControl& control)
 }
 
 void Stepper::start() {
-  remaining_ = forever();
+  remaining_ = forever_;
 }
 
 void Stepper::stop() {
@@ -55,21 +55,21 @@ void Stepper::turn(float turns) {
 }
 
 void Stepper::move(StepperControl& control, byte unit) {
-  if (remaining_ > 0) {
+  if (micros_pr_step_ != 0 && remaining_ > 0) {
     if (now() - clock_ >= micros_pr_step_) {
       clock_ += micros_pr_step_;
       if (reverse_) {
-        direction_ = !direction_;
         reverse_ = false;
+        direction_ = !direction_;
       }
       advance();
       control.step(fullStep(), unit);
-      if (remaining_ != forever()) {
+      if (remaining_ != forever_) {
         --remaining_;
       }
     }
   }
-  else if (micros_pr_step_ != 0) {
+  else {
     control.step(0, unit);
     clock_ = now();
   }

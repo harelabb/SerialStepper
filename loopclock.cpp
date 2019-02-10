@@ -4,7 +4,7 @@
 namespace {
 
   loopClock::Millis millis_ = ::millis();
-  loopClock::Time micros_ = ::micros();
+  loopClock::Micros micros_ = ::micros();
 
 }
 
@@ -16,7 +16,7 @@ namespace loopClock {
     micros_ = ::micros();
   }
 
-  Time now() {
+  Micros now() {
     return micros_;
   }
 
