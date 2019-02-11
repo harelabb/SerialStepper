@@ -21,7 +21,8 @@ public:
   uint32_t remaining() const;
   bool running() const;
 
-  void advance();
+  void tick();
+  void advance(Direction direction);
   void move(StepperControl& control, byte unit);
 
   Stepper& operator=(const Stepper&) = delete;
@@ -29,9 +30,7 @@ public:
   Stepper(Stepper&&) = delete;
 
 private:
-  byte fullStep() const;
-
-  byte current_ = 0;
+  byte pos_ = 0;
   Direction direction_ = FORWARD;
   bool reverse_ = false;
 
@@ -51,12 +50,14 @@ class StepperControl {
 public:
   StepperControl() {}
   void run();
-  void step(byte step, byte unit);
+  void step(byte pos, byte unit);
   virtual void begin() {};
   virtual ~StepperControl();
   void addStepper(Stepper* stepper);
+  byte fullStep(byte pos) const;
+
 private:
-  virtual void doStep(byte step, byte unit) = 0;
+  virtual void doStep(byte pos, byte unit) = 0;
   virtual void doMoveSteppers() = 0;
   virtual void doRun() = 0;
   virtual void doAddStepper(Stepper* stepper) = 0;
@@ -95,13 +96,15 @@ private:
   void doMoveSteppers() override {
     for (byte unit = 0; unit < nSteppers(); ++unit) {
       if (steppers_[unit]) {
+        steppers_[unit]->tick();
         steppers_[unit]->move(*this, unit);
       }
     }
   }
 
-  void doStep(byte step, byte unit) override {
+  void doStep(byte pos, byte unit) override {
     if (unit < nSteppers()) {
+      auto step = fullStep(pos);
       Status unit_stat = step << (4 * unit);
       Status unit_mask = 0x0F << (4 * unit);
       status_ = (status_ & ~unit_mask) | unit_stat;
