@@ -9,8 +9,8 @@
 
 #include <Ota.h>
 
-static const char* ssid = "spelemann2";
-static const char* password = "konnefin";
+static const char* ssid = "";
+static const char* password = "";
 
 // Make a Mcp23017StepperControl on i2c address 0x20
 //Pcf8574StepperControl pcf8574;
