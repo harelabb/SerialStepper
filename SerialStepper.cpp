@@ -54,7 +54,7 @@ void Stepper::turn(float turns) {
   }
 }
 
-void Stepper::move(StepperControl& control, byte unit) {
+void Stepper::tick() {
   if (micros_pr_step_ != 0 && remaining_ > 0) {
     if (now() - clock_ >= micros_pr_step_) {
       clock_ += micros_pr_step_;
@@ -62,27 +62,31 @@ void Stepper::move(StepperControl& control, byte unit) {
         reverse_ = false;
         direction_ = !direction_;
       }
-      advance();
-      control.step(fullStep(), unit);
+      advance(direction_);
       if (remaining_ != forever_) {
         --remaining_;
       }
     }
   }
-  else {
-    control.step(0, unit);
+  else  {
     clock_ = now();
   }
 }
 
-void Stepper::advance() {
-   current_ = (current_ + 4 + 1 - 2 * int(direction_)) % 4;
+void Stepper::move(StepperControl& control, byte unit) {
+  if (remaining_ > 0) {
+    control.step(pos_ + 1, unit);
+  }
+  else {
+    control.step(0, unit);
+  }
 }
 
-byte Stepper::fullStep() const {
-  static constexpr int32_t fsteps = 0b1001001101101100;
-  return (fsteps >> (4 * current_)) & 0x0F;
+
+void Stepper::advance(Direction direction) {
+  pos_ = (pos_ + 4 + 1 - 2 * int(direction)) % 4;
 }
+
 
 bool Stepper::running() const {
   return remaining_ > 0;
@@ -94,8 +98,8 @@ void StepperControl::run() {
 }
 
 
-void StepperControl::step(byte step, byte unit) {
-  doStep(step, unit);
+void StepperControl::step(byte pos, byte unit) {
+  doStep(pos, unit);
 }
 
 
@@ -103,6 +107,14 @@ void StepperControl::addStepper(Stepper* stepper) {
   if (stepper) {
     doAddStepper(stepper);
   }
+}
+
+byte StepperControl::fullStep(byte pos) const {
+  if (pos == 0) {
+    return 0;
+  }
+  static constexpr int32_t fsteps = 0b1001001101101100;
+  return (fsteps >> (4 * (pos - 1))) & 0x0F;
 }
 
 

@@ -26,9 +26,9 @@ Mcp23017StepperControl mcp23017(0x20);
 loopClock::Timer clk1, clk2, clk3;
 
 Stepper stp1(mcp23017);
-Stepper stp2(mcp23017);
-Stepper stp3(mcp23017);
-Stepper stp4(mcp23017);
+// Stepper stp2(mcp23017);
+// Stepper stp3(mcp23017);
+// Stepper stp4(mcp23017);
 // Stepper stp5(mcp23017_2);
 // Stepper stp6(mcp23017_2);
 // Stepper stp7(mcp23017_2);
@@ -36,21 +36,21 @@ Stepper stp4(mcp23017);
 // For the AccelSteppers, define two functions to forward
 // and backward step a Stepper
 void forward(Stepper& stepper) {
-  stepper.direction(Stepper::Direction::FORWARD);
   stepper.speed(0);
   stepper.step(1);
+  stepper.advance(Stepper::Direction::FORWARD);
 }
 
 void backward(Stepper& stepper) {
-  stepper.direction(Stepper::Direction::BACKWARD);
   stepper.speed(0);
   stepper.step(1);
+  stepper.advance(Stepper::Direction::BACKWARD);
 }
 
-// // Turn Steppers stp1 and stp2 into AccelSteppers using the two functions
-// AccelStepper stepper1([&](){forward(stp1);}, [&](){backward(stp1);});
+// Turn Steppers stp1 and stp2 into AccelSteppers using the two functions
+AccelStepper stepper1([&](){forward(stp1);}, [&](){backward(stp1);});
 // AccelStepper stepper2([&](){forward(stp2);}, [&](){backward(stp2);});
-// AccelStepper stepper3([&](){forward(stp7);}, [&](){backward(stp7);});
+// AccelStepper stepper3([&](){forward(stp3);}, [&](){backward(stp3);});
 
 void setup() {
   // Initialize libraries
@@ -67,9 +67,9 @@ void setup() {
 //  arduino.begin();
 
   // Initialize and set first targets for the AccelSteppers
-  // stepper1.setMaxSpeed(500);
-  // stepper1.setAcceleration(300.0);
-  // stepper1.moveTo(4096);
+  stepper1.setMaxSpeed(500);
+  stepper1.setAcceleration(300.0);
+  stepper1.moveTo(2048);
 
   // stepper2.setMaxSpeed(600);
   // stepper2.setAcceleration(100.0);
@@ -83,24 +83,25 @@ void setup() {
   // stp2.speed(8);
   // stp4.speed(0);
   // stp3.speed(10);
-  stp3.start();
-  stp4.start();
-  stp2.direction(Stepper::Direction::BACKWARD);
+  // stp3.start();
+  // stp4.start();
+  // stp2.direction(Stepper::Direction::BACKWARD);
   Serial.println("Starting stepper motors");
 }
 
 void runner() {
   loopClock::tick();
+
+  // Update the AccelSteppers
+  stepper1.run();
+  // stepper2.run();
+  // stepper3.run();
+
   mcp23017.run();
   // Update the clock and move the stepper if due
 //  mcp23017_2.run();
 //  pcf8574.run();
 //  shift_reg.run();
-
-  // Update the AccelSteppers
-  // stepper1.run();
-  // stepper2.run();
-  // stepper3.run();
 
   // check for ota sketch update
   OtaLoop();
@@ -109,39 +110,41 @@ void runner() {
 
 void loop() {
   runner();
-  if (!stp1.running()) {
-    clk1.set(5);
-    if (clk1.wait()) {
-      stp3.speed(0.5);
-      if (stp2.running()) {
-        stp1.reverse();
-      }
-      stp1.speed(4);
-      stp1.turn(1.5);
-    }
+  // if (!stp1.running()) {
+  clk1.set(15);
+  if (clk1.wait()) {
+    stepper1.moveTo(-stepper1.currentPosition());
   }
-  if (!stp2.running()) {
-    clk2.set(6);
-    stp2.speed(8);
-    stp2.reverse();
-    stp2.turn(2);
-  }
-  if (clk2.wait()) {
-    stp3.speed(12);
-    stp3.reverse();
-  }
-  // Ten seconds on, five seconds off
-  if (!stp4.running()) {
-    if (clk3.wait()) {
-      stp4.speed(10);
-      stp4.start();
-    }
-    clk3.set(10);
-  }
-  else {
-    if (clk3.wait()) {
-      stp4.speed(0);
-    }
-    clk3.set(5);
-  }
+  //     stp3.speed(0.5);
+  //     if (stp2.running()) {
+  //       stp1.reverse();
+  //     }
+  //     stp1.speed(4);
+  //     stp1.turn(1.5);
+  //   }
+  // }
+  // if (!stp2.running()) {
+  //   clk2.set(6);
+  //   stp2.speed(8);
+  //   stp2.reverse();
+  //   stp2.turn(2);
+  // }
+  // if (clk2.wait()) {
+  //   stp3.speed(12);
+  //   stp3.reverse();
+  // }
+  // // Ten seconds on, five seconds off
+  // if (!stp4.running()) {
+  //   if (clk3.wait()) {
+  //     stp4.speed(10);
+  //     stp4.start();
+  //   }
+  //   clk3.set(10);
+  // }
+  // else {
+  //   if (clk3.wait()) {
+  //     stp4.speed(0);
+  //   }
+  //   clk3.set(5);
+  // }
 }
