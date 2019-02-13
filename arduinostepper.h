@@ -1,7 +1,7 @@
 #ifndef ARDUINOSTEPPER_H
 #define ARDUINOSTEPPER_H
 
-#include "SerialStepper.h"
+#include "SerialStepperControl.h"
 
 // This controller drives the stepper directly from the Arduino
 // Each controller can handle 1 stepper.

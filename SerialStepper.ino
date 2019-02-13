@@ -1,3 +1,4 @@
+#include "SerialStepper.h"
 #include "mcp23017stepper.h"
 //#include "pcf8574stepper.h"
 //#include "arduinostepper.h"
@@ -9,8 +10,8 @@
 
 #include <Ota.h>
 
-static const char* ssid = "";
-static const char* password = "";
+static const char* ssid = "spelemann2";
+static const char* password = "konnefin";
 
 // Make a Mcp23017StepperControl on i2c address 0x20
 //Pcf8574StepperControl pcf8574;
@@ -37,13 +38,13 @@ Stepper stp1(mcp23017);
 // and backward step a Stepper
 void forward(Stepper& stepper) {
   stepper.speed(0);
-  stepper.step(1);
+  stepper.steps(1);
   stepper.advance(Stepper::Direction::FORWARD);
 }
 
 void backward(Stepper& stepper) {
   stepper.speed(0);
-  stepper.step(1);
+  stepper.steps(1);
   stepper.advance(Stepper::Direction::BACKWARD);
 }
 
@@ -55,8 +56,6 @@ AccelStepper stepper1([&](){forward(stp1);}, [&](){backward(stp1);});
 void setup() {
   // Initialize libraries
   Serial.begin(115200);
-  WifiConnect(ssid, password);
-  OtaSetup();
   Wire.begin(0, 2);
 
   // Initialize the stepper motor controllers
@@ -67,9 +66,9 @@ void setup() {
 //  arduino.begin();
 
   // Initialize and set first targets for the AccelSteppers
-  stepper1.setMaxSpeed(500);
-  stepper1.setAcceleration(300.0);
-  stepper1.moveTo(2048);
+  // stepper1.setMaxSpeed(500);
+  // stepper1.setAcceleration(300.0);
+  // stepper1.moveTo(2048);
 
   // stepper2.setMaxSpeed(600);
   // stepper2.setAcceleration(100.0);
@@ -79,21 +78,23 @@ void setup() {
   // stepper3.setAcceleration(100.0);
   // stepper3.moveTo(10000000);
 
-  // stp1.speed(4);
+  stp1.speed(8);
   // stp2.speed(8);
   // stp4.speed(0);
   // stp3.speed(10);
   // stp3.start();
   // stp4.start();
   // stp2.direction(Stepper::Direction::BACKWARD);
-  Serial.println("Starting stepper motors");
+  // Serial.println("Starting stepper motors");
+  WifiConnect(ssid, password);
+  OtaSetup();
 }
 
 void runner() {
   loopClock::tick();
 
   // Update the AccelSteppers
-  stepper1.run();
+  // stepper1.run();
   // stepper2.run();
   // stepper3.run();
 
@@ -111,10 +112,15 @@ void runner() {
 void loop() {
   runner();
   // if (!stp1.running()) {
-  clk1.set(15);
-  if (clk1.wait()) {
-    stepper1.moveTo(-stepper1.currentPosition());
+  if (clk1.set(15)) {
+    stp1.reverse();
+    stp1.turn(1);
   }
+  clk1.wait();
+
+
+  //   // stepper1.moveTo(-stepper1.currentPosition());
+  // }
   //     stp3.speed(0.5);
   //     if (stp2.running()) {
   //       stp1.reverse();

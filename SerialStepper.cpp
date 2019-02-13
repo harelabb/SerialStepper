@@ -1,6 +1,14 @@
 #include "SerialStepper.h"
+#include "SerialStepperControl.h"
 
 using loopClock::now;
+
+namespace {
+  byte fullStep(byte pos) {
+    static constexpr uint16_t fsteps = 0b1001001101101100;
+    return (fsteps >> (4 * pos)) & 0x0F;
+  }
+}
 
 Stepper::Stepper(StepperControl& control)
   : clock_(now()) {
@@ -8,11 +16,11 @@ Stepper::Stepper(StepperControl& control)
 }
 
 void Stepper::start() {
-  remaining_ = forever_;
+  steps(infinite_);
 }
 
 void Stepper::stop() {
-  remaining_ = 0;
+  steps(0);
 }
 
 void Stepper::speed(float rpm) {
@@ -33,29 +41,29 @@ void Stepper::reverse() {
   reverse_ = true;
 }
 
-void Stepper::step(uint32_t steps) {
-  remaining_ = steps;
+void Stepper::steps(uint32_t nsteps) {
+  steps_ = nsteps;
 }
 
 Stepper::Direction Stepper::direction() const {
   return direction_;
 }
 
-uint32_t Stepper::remaining() const {
-  return remaining_;
+uint32_t Stepper::steps() const {
+  return steps_;
 }
 
 void Stepper::turn(float turns) {
   if (turns > 0) {
-    step(uint32_t(float(steps_pr_turn_) * turns));
+    steps(uint32_t(float(steps_pr_turn_) * turns));
   }
   else {
-    step(0);
+    steps(0);
   }
 }
 
-void Stepper::tick() {
-  if (micros_pr_step_ != 0 && remaining_ > 0) {
+byte Stepper::tick() {
+  if (running()) {
     if (now() - clock_ >= micros_pr_step_) {
       clock_ += micros_pr_step_;
       if (reverse_) {
@@ -63,59 +71,24 @@ void Stepper::tick() {
         direction_ = !direction_;
       }
       advance(direction_);
-      if (remaining_ != forever_) {
-        --remaining_;
+      if (steps_ != infinite_) {
+        --steps_;
       }
     }
   }
   else  {
     clock_ = now();
   }
-}
-
-void Stepper::move(StepperControl& control, byte unit) {
-  if (remaining_ > 0) {
-    control.step(pos_ + 1, unit);
-  }
-  else {
-    control.step(0, unit);
-  }
+  return steps_ == 0 ? 0 : status_;
 }
 
 
 void Stepper::advance(Direction direction) {
   pos_ = (pos_ + 4 + 1 - 2 * int(direction)) % 4;
+  status_ = fullStep(pos_);
 }
 
 
 bool Stepper::running() const {
-  return remaining_ > 0;
+  return steps_ != 0 && micros_pr_step_ != 0;
 }
-
-void StepperControl::run() {
-  doMoveSteppers();
-  doRun();
-}
-
-
-void StepperControl::step(byte pos, byte unit) {
-  doStep(pos, unit);
-}
-
-
-void StepperControl::addStepper(Stepper* stepper) {
-  if (stepper) {
-    doAddStepper(stepper);
-  }
-}
-
-byte StepperControl::fullStep(byte pos) const {
-  if (pos == 0) {
-    return 0;
-  }
-  static constexpr int32_t fsteps = 0b1001001101101100;
-  return (fsteps >> (4 * (pos - 1))) & 0x0F;
-}
-
-
-StepperControl::~StepperControl() {}

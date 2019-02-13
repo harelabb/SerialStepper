@@ -1,7 +1,7 @@
 #ifndef PCF8574STEPPER_H
 #define PCF8574STEPPER_H
 
-#include "SerialStepper.h"
+#include "SerialStepperControl.h"
 
 // This i2c controller can drive up to 2 steppers.
 // Up to 8 i2c addresse gives a (teorethical) total of 16 steppers

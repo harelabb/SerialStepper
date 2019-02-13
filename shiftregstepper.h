@@ -1,7 +1,7 @@
 #ifndef SHIFTREGSTEPPER_H
 #define SHIFTREGSTEPPER_H
 
-#include "SerialStepper.h"
+#include "SerialStepperControl.h"
 
 // This controller assumes 74HC595 shift registers each with 2 steppers
 // The controller can handle up to 8 cascaded shift registers,

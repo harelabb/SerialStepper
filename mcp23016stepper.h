@@ -1,7 +1,7 @@
 #ifndef MCP23016STEPPER_H
 #define MCP23016STEPPER_H
 
-#include "SerialStepper.h"
+#include "SerialStepperControl.h"
 
 // This i2c controller can drive up to 4 stepper.
 // Up to 8 i2c addresse gives a (teorethical) total of 32 steppers
