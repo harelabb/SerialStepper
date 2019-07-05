@@ -1,0 +1,162 @@
+#include <SerialStepper.h>
+#include <mcp23017stepper.h>
+
+#include <Wire.h>         // I²C
+#include <Ota.h>          // ESP WiFi and OverTheAir update
+#include <PubSubClient.h> // Mqtt
+
+static const char* const ssid = "spelemann2";
+static const char* const password = "konnefin";
+
+// Mqtt variables
+WiFiClient wifi_client;
+PubSubClient client(wifi_client);
+static const char* const mqtt_server = "moxon";
+static const char* const mqtt_in  = "Stepper/in";
+static const char* const mqtt_out = "Stepper/out";
+static const int mqtt_port = 1883;
+
+// Make a Mcp23017StepperControl
+Mcp23017StepperControl stepper_ctl;
+
+// Define four step motors
+Stepper stp0(stepper_ctl);
+Stepper stp1(stepper_ctl);
+Stepper stp2(stepper_ctl);
+Stepper stp3(stepper_ctl);
+// Enable referencing them as an array
+Stepper* const steppers[] = {&stp0, &stp1, &stp2, &stp3};
+constexpr int nsteppers = 4;
+
+constexpr float max_speed = 15; // rpm
+
+// Set speed of stepper no idx
+void runStepper(int idx, float speed) {
+  if (0 <= idx && idx < nsteppers) {
+    if (speed == 0) {
+      steppers[idx]->stop();
+      return;
+    }
+    steppers[idx]->direction(speed < 0 ?
+                             Stepper::BACKWARD : Stepper::FORWARD);
+    float rpm = (speed < 0 ? -speed : speed) * max_speed;
+    steppers[idx]->speed(rpm);
+    steppers[idx]->start();
+  }
+}
+
+// Connect to MQTT broker if needed
+bool  mqttConnect(PubSubClient client, int& miss) {
+  if (!client.connected()) {
+    ++miss;
+    if (client.connect((WiFi.localIP().toString().c_str()))) {
+      client.subscribe(mqtt_in);
+    }
+    else {
+      return false; // Connection failed
+    }
+  }
+  return true; // Connected
+}
+
+// Extract stepper index and speed from payload string
+bool parsePayload(char* pl, int& idx, float& speed) {
+  return sscanf(pl, "{\"idx\":%d, \"speed\":%f}",
+                &idx, &speed) == 2;
+}
+
+void mqttCallback(char* /* topic */, byte* payload, unsigned int len) {
+  constexpr int max_len = 127;
+  if (len > max_len) {
+    return;
+  }
+
+  // Copy the payload from byte array to C-string
+  char pl[max_len + 1]; // extra space for the trailing 0
+  char* p = pl;
+  while (len--) {
+    *p++ = *payload++;
+  }
+  *p = 0; // Add a zero to terminate string
+
+  int idx;
+  float speed;
+  if (parsePayload(pl, idx, speed)) {
+    // Set the stepper speed
+    runStepper(idx, speed);
+    // Echo the payload back to MQTT
+    client.publish(mqtt_out, pl);
+  }
+}
+
+void mqttSetup() {
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(mqttCallback);
+}
+
+
+void setup() {
+  // Initialize libraries
+  Serial.begin(115200);
+  Wire.begin(0, 2);
+//  Wire.begin();
+
+  // Initialize the stepper motor controller
+  stepper_ctl.begin();
+
+  WifiConnect(ssid, password);
+  OtaSetup(false);
+  mqttSetup();
+
+  for (auto* stepper : steppers) {
+    stepper->speed(14);
+    stepper->start();
+  }
+
+}
+
+void loop() {
+  loopClock::tick();
+
+  // Check MQTT
+  static int mqtt_miss = 0;
+  if (mqttConnect(client, mqtt_miss)) {
+    client.loop();
+  }
+
+  // Move the steppers if due time
+  stepper_ctl.run();
+
+  // check for Esp OTA sketch update
+  OtaLoop();
+
+  static loopClock::Micros m = 0;
+  static loopClock::Micros prev = loopClock::microsNow();
+  static int32_t loop_count = 0;
+  static int32_t ave = 0;
+  static int32_t big = 0;
+
+  if (loop_count == 200000) {
+    String payload = String("{\"max_time\":") + String(m) +
+      String(",\"ave_time\":") + String(ave/loop_count) +
+      String(",\"mqtt_miss\":") + String(mqtt_miss) +
+      String(",\"big_times\":") + String(big) + String("}");
+//    Serial.println(payload);
+    client.publish(mqtt_out, payload.c_str());
+    m = 0;
+    ave = 0;
+    big = 0;
+    loop_count = 0;
+    mqtt_miss = 0;
+    prev = loopClock::microsNow();
+  }
+  ++loop_count;
+  loopClock::Micros tm = loopClock::microsNow() - prev;
+  m = std::max(m, tm);
+  ave += tm;
+  if (tm > 2000) ++big;
+  prev = loopClock::microsNow();
+
+
+  yield();
+}
