@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>SerialStepper: examples/SPI595Stepper/SPI595Stepper.ino File Reference</title>
+<title>SerialStepper: examples/SerialAccelStepper/SerialAccelStepper.ino File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a class="el" href="dir_bf7a001ed15ec8d94a1450dfe2db2e8d.html">SPI595Stepper</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a class="el" href="dir_ec244c39bdd341fd52b5197dc80d6e06.html">SerialAccelStepper</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,22 +90,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">SPI595Stepper.ino File Reference</div>  </div>
+<div class="title">SerialAccelStepper.ino File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Example of using 74HC595 shift registers to drive 8 stepper motors.  
-<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="_serial_stepper_8h.html">SerialStepper.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="spi595stepper_8h.html">spi595stepper.h</a>&gt;</code><br />
-<code>#include &lt;SPI.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="mcp23017stepper_8h.html">mcp23017stepper.h</a>&gt;</code><br />
+<code>#include &lt;AccelStepper.h&gt;</code><br />
+<code>#include &lt;Wire.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for SPI595Stepper.ino:</div>
+Include dependency graph for SerialAccelStepper.ino:</div>
 <div class="dyncontent">
-<div class="center"><img src="_s_p_i595_stepper_8ino__incl.png" border="0" usemap="#examples_2_s_p_i595_stepper_2_s_p_i595_stepper_8ino" alt=""/></div>
-<map name="examples_2_s_p_i595_stepper_2_s_p_i595_stepper_8ino" id="examples_2_s_p_i595_stepper_2_s_p_i595_stepper_8ino">
-<area shape="rect" id="node2" href="_serial_stepper_8h.html" title="SerialStepper.h" alt="" coords="9,95,120,121"/>
-<area shape="rect" id="node5" href="spi595stepper_8h.html" title="spi595stepper.h" alt="" coords="148,95,263,121"/>
+<div class="center"><img src="_serial_accel_stepper_8ino__incl.png" border="0" usemap="#examples_2_serial_accel_stepper_2_serial_accel_stepper_8ino" alt=""/></div>
+<map name="examples_2_serial_accel_stepper_2_serial_accel_stepper_8ino" id="examples_2_serial_accel_stepper_2_serial_accel_stepper_8ino">
+<area shape="rect" id="node2" href="_serial_stepper_8h.html" title="SerialStepper.h" alt="" coords="6,95,117,121"/>
+<area shape="rect" id="node5" href="mcp23017stepper_8h.html" title="mcp23017stepper.h" alt="" coords="142,95,278,121"/>
 <area shape="rect" id="node4" href="loopclock_8h.html" title="loopclock.h" alt="" coords="20,169,108,196"/>
 <area shape="rect" id="node6" href="_serial_stepper_control_8h.html" title="SerialStepperControl.h" alt="" coords="133,169,286,196"/>
 </map>
@@ -113,35 +111,36 @@ Include dependency graph for SPI595Stepper.ino:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
+<tr class="memitem:a753821cbc0ea6ec62a2ef30df9492407"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a753821cbc0ea6ec62a2ef30df9492407"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#a753821cbc0ea6ec62a2ef30df9492407">forward</a> (<a class="el" href="class_stepper.html">Stepper</a> &amp;stepper)</td></tr>
+<tr class="memdesc:a753821cbc0ea6ec62a2ef30df9492407"><td class="mdescLeft">&#160;</td><td class="mdescRight">AccelStepper forward interface. <br /></td></tr>
+<tr class="separator:a753821cbc0ea6ec62a2ef30df9492407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdeac9f6f9424f9b62174e4b3c8a7581"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdeac9f6f9424f9b62174e4b3c8a7581"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#abdeac9f6f9424f9b62174e4b3c8a7581">backward</a> (<a class="el" href="class_stepper.html">Stepper</a> &amp;stepper)</td></tr>
+<tr class="memdesc:abdeac9f6f9424f9b62174e4b3c8a7581"><td class="mdescLeft">&#160;</td><td class="mdescRight">AccelStepper backward interface. <br /></td></tr>
+<tr class="separator:abdeac9f6f9424f9b62174e4b3c8a7581"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called once at start-up.  <a href="#a4fc01d736fe50cf5b977f755b675f11d">More...</a><br /></td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
+<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="memdesc:afe461d27b9c48d5921c00d521181f12f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called repeatedly.  <a href="#afe461d27b9c48d5921c00d521181f12f">More...</a><br /></td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a7757cef2b31f4110d1be22c9b168cad0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7757cef2b31f4110d1be22c9b168cad0"></a>
-constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#a7757cef2b31f4110d1be22c9b168cad0">nsteppers</a> = 8</td></tr>
-<tr class="memdesc:a7757cef2b31f4110d1be22c9b168cad0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the number of steppers. <br /></td></tr>
-<tr class="separator:a7757cef2b31f4110d1be22c9b168cad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1b020433edfd40b529f25dfdf446d3c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad1b020433edfd40b529f25dfdf446d3c"></a>
-constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#ad1b020433edfd40b529f25dfdf446d3c">latch_pin</a> = 4</td></tr>
-<tr class="memdesc:ad1b020433edfd40b529f25dfdf446d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the pin to use as latch pin. <br /></td></tr>
-<tr class="separator:ad1b020433edfd40b529f25dfdf446d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f97b839c4971216f7d264af02e089dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7f97b839c4971216f7d264af02e089dc"></a>
-<a class="el" href="class_stepper.html">Stepper</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#a7f97b839c4971216f7d264af02e089dc">steppers</a> [<a class="el" href="_s_p_i595_stepper_8ino.html#a7757cef2b31f4110d1be22c9b168cad0">nsteppers</a>]</td></tr>
-<tr class="memdesc:a7f97b839c4971216f7d264af02e089dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the <a class="el" href="class_stepper.html" title="This class represents a stepper motor. ">Stepper</a> motors. <br /></td></tr>
-<tr class="separator:a7f97b839c4971216f7d264af02e089dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81676773f872956a52fd021dc029237"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af81676773f872956a52fd021dc029237"></a>
-<a class="el" href="class_spi595_stepper_control.html">Spi595StepperControl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_s_p_i595_stepper_8ino.html#af81676773f872956a52fd021dc029237">stepper_ctl</a> {<a class="el" href="_s_p_i595_stepper_8ino.html#ad1b020433edfd40b529f25dfdf446d3c">latch_pin</a>}</td></tr>
-<tr class="memdesc:af81676773f872956a52fd021dc029237"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the <a class="el" href="class_stepper_control.html" title="Abstract interface class for the stepper control. ">StepperControl</a>. <br /></td></tr>
-<tr class="separator:af81676773f872956a52fd021dc029237"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a48ce76b720688ca65a07fddad39c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_mcp23017_stepper_control.html">Mcp23017StepperControl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#ad1a48ce76b720688ca65a07fddad39c6">stepper_ctl</a></td></tr>
+<tr class="memdesc:ad1a48ce76b720688ca65a07fddad39c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This example demostrates how to use AccelStepper in combination with SerialStepper.  <a href="#ad1a48ce76b720688ca65a07fddad39c6">More...</a><br /></td></tr>
+<tr class="separator:ad1a48ce76b720688ca65a07fddad39c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af50cf0e6e42ff3b467074cce3906b003"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af50cf0e6e42ff3b467074cce3906b003"></a>
+<a class="el" href="class_stepper.html">Stepper</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#af50cf0e6e42ff3b467074cce3906b003">stp</a> [4]</td></tr>
+<tr class="memdesc:af50cf0e6e42ff3b467074cce3906b003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the Steppers to use. <br /></td></tr>
+<tr class="separator:af50cf0e6e42ff3b467074cce3906b003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7aaa746b9f128f854cbe7c85120ea9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7aaa746b9f128f854cbe7c85120ea9e"></a>
+AccelStepper&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_accel_stepper_8ino.html#ab7aaa746b9f128f854cbe7c85120ea9e">stepper1</a></td></tr>
+<tr class="memdesc:ab7aaa746b9f128f854cbe7c85120ea9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define four AccelSteppers. <br /></td></tr>
+<tr class="separator:ab7aaa746b9f128f854cbe7c85120ea9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Example of using 74HC595 shift registers to drive 8 stepper motors. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+<h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afe461d27b9c48d5921c00d521181f12f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -156,8 +155,8 @@ constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 </div><div class="memdoc">
 
 <p>This is called repeatedly. </p>
-<p>Update the clock.</p>
-<p>Give commands to the steppers.</p>
+<p>Update clock.</p>
+<p>Accelstepper commands</p>
 <p>Move the steppers if due time. </p>
 
 </div>
@@ -177,8 +176,24 @@ constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 
 <p>This is called once at start-up. </p>
 <p>Initialize libraries.</p>
-<p>Initialize the stepper motor controller.</p>
-<p>Set different speed for each <a class="el" href="class_stepper.html" title="This class represents a stepper motor. ">Stepper</a>. </p>
+<p>Initialize the stepper motor controller</p>
+<p>Initialize AccelStepper speed, acceleration and distance to go. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="ad1a48ce76b720688ca65a07fddad39c6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_mcp23017_stepper_control.html">Mcp23017StepperControl</a> stepper_ctl</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This example demostrates how to use AccelStepper in combination with SerialStepper. </p>
+<p>Four AccelSteppers are running. Define the motors </p>
 
 </div>
 </div>

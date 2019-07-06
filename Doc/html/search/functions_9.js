@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['setup',['setup',['../_mqtt_serial_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;MqttSerialStepper.ino'],['../examples_2_serial_accel_stepper_2_serial_accel_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;SerialAccelStepper.ino'],['../_s_p_i595_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;SPI595Stepper.ino']]],
+  ['setup',['setup',['../_mqtt_serial_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;MqttSerialStepper.ino'],['../_serial_accel_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;SerialAccelStepper.ino'],['../_s_p_i595_stepper_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;SPI595Stepper.ino']]],
   ['shiftout595steppercontrol',['Shiftout595StepperControl',['../class_shiftout595_stepper_control.html#a342eec21783942138b3fdaabd2b591ba',1,'Shiftout595StepperControl']]],
   ['speed',['speed',['../class_stepper.html#a12315c2404c5600d8eff022d74705866',1,'Stepper::speed(float rpm)'],['../class_stepper.html#ad0e0285efa6ff303843f0f4fb9f02f8b',1,'Stepper::speed() const ']]],
   ['start',['start',['../class_stepper.html#abc0b165434fbdd8f00c6ebf683373083',1,'Stepper']]],

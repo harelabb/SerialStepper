@@ -1,5 +1,5 @@
 <map id="src/SerialStepper.h" name="src/SerialStepper.h">
 <area shape="rect" id="node2" href="$_mqtt_serial_stepper_8ino.html" title="examples/MqttSerialStepper\l/MqttSerialStepper.ino" alt="" coords="5,80,192,121"/>
-<area shape="rect" id="node3" href="$examples_2_serial_accel_stepper_2_serial_accel_stepper_8ino.html" title="This example demostrates how to use AccelStepper in combination with SerialStepper. " alt="" coords="217,80,410,121"/>
+<area shape="rect" id="node3" href="$_serial_accel_stepper_8ino.html" title="examples/SerialAccelStepper\l/SerialAccelStepper.ino" alt="" coords="217,80,410,121"/>
 <area shape="rect" id="node4" href="$_s_p_i595_stepper_8ino.html" title="Example of using 74HC595 shift registers to drive 8 stepper motors. " alt="" coords="435,80,605,121"/>
 </map>

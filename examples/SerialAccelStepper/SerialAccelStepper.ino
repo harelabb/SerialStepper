@@ -1,4 +1,5 @@
-/// @file
+/// @file SerialAccelStepper.ino
+
 /// This example demostrates how to use AccelStepper
 /// in combination with SerialStepper.
 /// Four AccelSteppers are running.
