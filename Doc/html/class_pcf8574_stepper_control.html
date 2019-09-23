@@ -168,7 +168,8 @@ static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A <a class="el" href="class_serial_stepper_control.html" title="Intermediate abstract base class for StepperControl. ">SerialStepperControl</a> using the PCF8574A or PCF8574 i2c port expander. </p>
 <p>This controller can drive up to 2 steppers. <br />
- Up to 8 i2c addresse gives a (theoretical) total of 16 steppers. </p>
+ Up to 8 i2c addresse gives a (theoretical) total of 16 steppers. <br />
+ Note that the pcf8574 cannot source enough current to drive the ULN2003. A 47kOhm pull-up resistor on each output pin will help. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7a1ffe7bfb3932899995141683bba7b9"></a>
 <div class="memitem">
