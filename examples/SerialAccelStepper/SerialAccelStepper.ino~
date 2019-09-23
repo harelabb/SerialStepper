@@ -1,0 +1,93 @@
+// This example demostrates how to use AccelStepper
+// in combination with SerialStepper.
+// Four AccelSteppers are running.
+// Two stepper motor drivers(uln2003a) is connected to each pcf8574a
+// Note: The pcf8574 need a 10K pull-up resistor to each output pin
+//       to limit output current.
+
+#include <SerialStepper.h>
+#include <mcp23017stepper.h>
+//#include <pcf8574stepper.h>
+
+#include <AccelStepper.h>
+
+#include <Wire.h>         // I²C
+
+// Define the motors
+//Pcf8574StepperControl stepper_ctl_0(0x38);
+//Pcf8574StepperControl stepper_ctl_1(0x39);
+
+Mcp23017StepperControl stepper_ctl;
+Stepper stp0(stepper_ctl);
+Stepper stp1(stepper_ctl);
+Stepper stp2(stepper_ctl);
+Stepper stp3(stepper_ctl);
+
+// Define AccelStepper interface
+void forward(Stepper& stepper) {
+  stepper.speed(0);
+  stepper.steps(1);
+  stepper.advance(Stepper::Direction::FORWARD);
+}
+void backward(Stepper& stepper) {
+  stepper.speed(0);
+  stepper.steps(1);
+  stepper.advance(Stepper::Direction::BACKWARD);
+}
+
+// Turn the steppers into AccelSteppers
+// using the two functions
+AccelStepper stepper1([&](){forward(stp0);},
+                      [&](){backward(stp0);});
+AccelStepper stepper2([&](){forward(stp1);},
+                      [&](){backward(stp1);});
+AccelStepper stepper3([&](){forward(stp2);},
+                      [&](){backward(stp2);});
+AccelStepper stepper4([&](){forward(stp3);},
+                      [&](){backward(stp3);});
+
+void setup() {
+  // Initialize libraries
+  Wire.begin();
+
+  // Initialize the stepper motor controller
+  stepper_ctl.begin();
+
+  stepper1.setMaxSpeed(300.0);
+  stepper1.setAcceleration(100.0);
+  stepper1.moveTo(1024);
+
+  stepper2.setMaxSpeed(600.0);
+  stepper2.setAcceleration(10.0);
+  stepper2.moveTo(-2048);
+
+  stepper3.setMaxSpeed(500.0);
+  stepper3.setAcceleration(100.0);
+  stepper3.moveTo(2048);
+
+  stepper4.setMaxSpeed(400.0);
+  stepper4.setAcceleration(100.0);
+  stepper4.moveTo(-1024);
+}
+
+void loop() {
+  // Update clock
+  loopClock::tick();
+
+  // Accelstepper commands
+  if (stepper1.distanceToGo() == 0)
+    stepper1.moveTo(-stepper1.currentPosition());
+  if (stepper2.distanceToGo() == 0)
+    stepper2.moveTo(-stepper2.currentPosition());
+  if (stepper3.distanceToGo() == 0)
+    stepper3.moveTo(-stepper3.currentPosition());
+  if (stepper4.distanceToGo() == 0)
+    stepper4.moveTo(-stepper4.currentPosition());
+  stepper1.run();
+  stepper2.run();
+  stepper3.run();
+  stepper4.run();
+
+  // Move the steppers if due time
+  stepper_ctl.run();
+}

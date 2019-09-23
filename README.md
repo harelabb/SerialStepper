@@ -1,6 +1,6 @@
 # SerialStepper Library for Arduino and compatibles #
 
-This is a drver for uniplar stepper motors driven by ULN2003/ULN2004
+This is a driver for unipolar stepper motors driven by ULN2003/ULN2004
 darlington arrays.
 
 ## Introduction ##

@@ -8,6 +8,8 @@
 /// A SerialStepperControl using the  PCF8574A or PCF8574 i2c port expander.
 /// This controller can drive up to 2 steppers.
 /// \n Up to 8 i2c addresse gives a (theoretical) total of 16 steppers.
+/// \n Note that the pcf8574 cannot source enough current to drive
+/// the ULN2003. A 47kΩ pull-up resistor on each output pin will help.
 class Pcf8574StepperControl : public SerialStepperControl<uint8_t> {
 public:
   /// Constructor.

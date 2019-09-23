@@ -44,7 +44,7 @@ AccelStepper steppers [] {
                 [&](){backward(stp[1]);}},
   AccelStepper {[&](){forward (stp[2]);},
                 [&](){backward(stp[2]);}},
-  AccelStepper {[&](){forward (stp[3]);},
+n  AccelStepper {[&](){forward (stp[3]);},
       [&](){backward(stp[3]);}}};
 
 /// This is called once at start-up.
