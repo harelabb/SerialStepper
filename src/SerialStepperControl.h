@@ -9,7 +9,7 @@ class Stepper;
 
 /// Abstract interface class for the stepper control.
 /// This is the base class for the control to be
-/// implmented for specific port expanding hardware
+/// implemented for specific port expanding hardware
 class StepperControl {
 
 public:
@@ -86,8 +86,8 @@ private:
 
   /// Generate the output pin values.
   /// <p> To be implemented in final class.
-  /// <p> The status parameter holds the pin value patterns for all the
-  /// steppers the steppers that this contoller handles.
+  /// <p> The status parameter holds the pin value patterns for all
+  /// the steppers that this contoller handles.
   /// <p> This function should set the output pins LOW/HIGH accoringly.
   virtual void doMove(Status status) = 0;
 

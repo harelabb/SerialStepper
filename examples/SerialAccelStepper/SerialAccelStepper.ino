@@ -3,7 +3,7 @@
 /// This example demostrates how to use AccelStepper
 /// in combination with SerialStepper.
 /// Four AccelSteppers are running.
-/// \nWe uese two PCF8574A with rwo steppers each.
+/// \nWe uese two PCF8574A with two steppers each.
 /// Remember a 47kΩ pull-up resistor on each i/o pin!
 
 #include <SerialStepper.h>
@@ -14,10 +14,10 @@
 
 #include <Wire.h>  // I²C
 
-/// Define the stepper controls.
+/// Define the stepper controllers.
 Pcf8574StepperControl stepper_ctl [] {
   Pcf8574StepperControl {0x38},
-  Pcf8574StepperControl (0x39)};
+  Pcf8574StepperControl {0x39}};
 
 /// AccelStepper forward interface.
 void forward(Stepper& stepper) {
@@ -45,7 +45,7 @@ AccelStepper steppers [] {
   AccelStepper {[&](){forward (stp[2]);},
                 [&](){backward(stp[2]);}},
   AccelStepper {[&](){forward (stp[3]);},
-      [&](){backward(stp[3]);}}};
+                [&](){backward(stp[3]);}}};
 
 /// This is called once at start-up.
 void setup() {
@@ -58,7 +58,7 @@ void setup() {
     ctl.begin();
   }
 
-  /// Assign steppers yo the controlles
+  /// Assign steppers to the controllers
   for (int i = 0; i < 2; ++i) {
     stepper_ctl[0].addStepper(stp[i]);
     stepper_ctl[1].addStepper(stp[i+2]);

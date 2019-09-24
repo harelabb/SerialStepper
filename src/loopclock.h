@@ -8,7 +8,7 @@
 /// Utility to check the clock only once per loop.
 namespace loopClock {
 
-  /// Uae the type that micros() return to store microseconds.
+  /// Use the type that micros() returns to store microseconds.
   using Micros = decltype(::micros());
 
   /// Get microseconds from the last call to tick().

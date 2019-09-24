@@ -17,6 +17,8 @@ target. This also means that only one stapper can run at the time.
 Another problem with multiple steppers, is that each stepper requires   
 four output pins on the microcontroller.
 
+This library should overcome these problems.
+
 #### Overview ####
 
 The library consists of 2 parts:
@@ -24,7 +26,7 @@ The library consists of 2 parts:
   1. The **Stepper**, that represents the status of the stepper
 
   2. The **StepperControl**, that requests update of the stepper status   
-     and generate the outout to the Darlinton arrays
+     and generate the output to the Darlington arrays
 
 In addition, there is the **loopClock**, that takes care of the time,
 and the Steppers can check if they should move anoter step.
