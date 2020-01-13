@@ -12,8 +12,8 @@ Spi595StepperControl::doBegin() {
 
 void
 Spi595StepperControl::doMove(Status status) {
-  constexpr int MHz = 1000000;
-  constexpr int speed = 20 * MHz;
+  constexpr auto MHz = 1000000;
+  constexpr auto speed = 20 * MHz;
   digitalWrite(ltc_pin_, LOW);
   SPI.beginTransaction(SPISettings(speed, MSBFIRST, SPI_MODE0));
   int nbytes = (nSteppers() + 1) / 2;

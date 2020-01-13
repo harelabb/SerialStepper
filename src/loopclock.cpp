@@ -25,7 +25,7 @@ namespace loopClock {
     if (time_ != 0) {
       return false;
     }
-    time_ = Millis(secs * 1000 + millis_);
+    time_ = Millis(secs * 1000);
     start_ = millis_;
     return true;
   }
