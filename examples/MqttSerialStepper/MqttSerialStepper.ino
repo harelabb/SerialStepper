@@ -38,7 +38,7 @@ constexpr       int   mqtt_port {1883};
 
 /// Define the StepperControl.
 Mcp23017StepperControl stepper_ctl {0x30};
-/// Define number of steppers o use.
+/// Define number of steppers to use.
 constexpr int nsteppers {4};
 /// Define the steppers.
 Stepper steppers[nsteppers];

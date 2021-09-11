@@ -61,7 +61,7 @@ void Stepper::turn(float turns) {
 
 byte Stepper::tick() {
   if (running()) {
-    if (microsNow() - clock_ >= micros_pr_step_) {
+    if (loopClock::Micros(microsNow() - clock_) >= micros_pr_step_) {
       clock_ += micros_pr_step_;
       advance(direction_);
       if (steps_ != infinite_) {

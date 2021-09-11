@@ -17,7 +17,7 @@ void
 Mcp23017StepperControl::doMove(Status status) {
   Wire.beginTransmission(i2caddr_);
   Wire.write(0x12); // GPIOA
-  Wire.write(status & 0xFF);
   Wire.write(status >> 8);
+  Wire.write(status & 0xFF);
   Wire.endTransmission();
 }
